@@ -62,6 +62,7 @@ function warn(){
     //Chat.log(Client.getLoadedMods())
     if (!bypass_confirm && jump_count(40) < 2) exit()
     Chat.log("@@ 您已同意！")
+    Chat.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 }
 
 
@@ -145,7 +146,7 @@ function set_origin(){
         stop()
     }
     Chat.say("/cglow block 3754396 4 " + original_block.getZ() + " 3")
-    Goto
+    goto_origin()
 }
 
 function action_switch(force = 0){
@@ -155,6 +156,11 @@ function action_switch(force = 0){
 
 function is_looking_down(){
     //Todo
+}
+
+function goto_origin(){
+    Goto1(original_block.getX() - 1, original_block.getY() + 1, original_block.getZ(), 0.5, 0, 0.5)
+    Goto1(original_block.getX(), original_block.getY() + 1, original_block.getZ(), 0.5, 0, 0.5)
 }
 
 function check_player_status(force = 0){
@@ -198,6 +204,7 @@ function Goto(dx,dy,dz,xx,yy,zz)//dx dy dz坐标xx yy zz偏移量
                 }
         } 
         gb_tt=Player.getPlayer().getPos()
+        Time.sleep(50)
     }
     Chat.say("#stop")
     Time.sleep(350)
@@ -211,6 +218,7 @@ function Goto1(dx,dy,dz,xx,yy,zz)//dx dy dz坐标xx yy zz偏移量
     while(Math.abs(gb_tt.getX()-dx-xx)>0.4 || Math.abs(gb_tt.getZ()-dz-zz)>0.4 || Math.abs(gb_tt.getY()-dy)>0)
     {
         gb_tt=Player.getPlayer().getPos()
+        Time.sleep(50)
     }
     Chat.say("#stop")
     Time.sleep(350)
