@@ -1,3 +1,187 @@
+bypass_confirm = 1
+breaker_name = "bot_breaker"
+
+original_block = null
+
+function self_description(){
+    function alpha_warn(){
+        Chat.log("WARNING:THIS IS A ALPHA VERSION!!")
+        Chat.log("WARNING:THIS IS A ALPHA VERSION!!")
+        Chat.log("WARNING:THIS IS A ALPHA VERSION!!")
+        Time.sleep(1000)
+    }
+
+    Chat.log("Tip:Log Format:##[INFO]  @@[WARN]  !![ERROR]")
+    
+    alpha_warn()
+    Chat.log("###########################################")
+    Chat.log("Auto Cut Cut Boom Version 4 - Left Side")
+    Chat.log("(Fork from V3Rev1, made by _XuanMing_, contributed by frsFallingSand)")
+    Chat.log("[Build id 1 - Date 2025/10/04]")
+    Time.sleep(1000)
+}
+
+
+//lock chain:execute in minecraft:the_nether run tp @s 3754396.32 4.00 -3751108.29 -2919.10 65.53
+
+function warn(){
+    delay = 1
+    if (bypass_confirm){
+        delay = 0
+    }
+    delay_ms = delay * 1000
+
+    Chat.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+    Chat.log("@@  ⚠️警告⚠️")
+    Chat.log("@@  请务必认真阅读以下文字至少一次")
+    Time.sleep(delay_ms)
+    Chat.log("@@ 0.第一次使用前必须在完全相同的镜像环境中测试！")
+    Time.sleep(delay_ms)
+    Chat.log("@@ 1.务必确保当前状态完全符合所选模式的状态要求，否则将不可避免地碎门")
+    Time.sleep(delay_ms)
+    Chat.log("@@ 2.确保已安装mod:clientcommand、baritone、double_hotbar")
+    Time.sleep(delay_ms)
+    Chat.log("@@ 3.切门前后请备份！切门千万条，备份第一条。pb忘记make，群友两行泪！")
+    Time.sleep(delay_ms)
+    Chat.log("@@ 4.必须启用自动补货、白名单挖掘限制（允许且最好只允许lever,obsidian）")
+    Time.sleep(delay_ms)
+    Chat.log("@@ 5.名为bot_breaker的假人主手中应有稿子，如欲更改请更改脚本第二行变量")
+    Time.sleep(delay_ms)
+    Chat.log("@@ 6.携带足够的黑曜石、确保饱食度足够，脚本不会进行这方面的检测！")
+    Time.sleep(delay_ms)
+    Chat.log("@@ 7.为了安全，本脚本支持并建议启动伪潜行、装备鞘翅")
+    Time.sleep(delay_ms)
+    Chat.log("@@ 8.物品栏顺序:(1-6)稿子,黑曜石,点火装置,海龟蛋,岩浆块,拉杆")
+    Time.sleep(delay_ms)
+    Chat.log("@@ 8.物品栏顺序:(倒数第二列3-6)粘液块,红石块,活塞,粘性活塞")
+    Time.sleep(delay_ms)
+    Chat.log("@@ 9.请在支链最远端最后一个顶黑曜石的右下一格放置一个熔炉以定位")
+    Time.sleep(delay_ms)
+    Chat.log("@@ 在2s内跳跃两次以确认我已阅读并且使用此脚本产生的全部责任均由您承担")
+    if(!bypass_confirm) Chat.log("@@ 如您想跳过确认与延迟 请将脚本第一行的“0”修改为“1”")
+    //Chat.log(Client.getLoadedMods())
+    if (!bypass_confirm && jump_count(40) < 2) exit()
+    Chat.log("@@ 您已同意！")
+}
+
+
+
+function check_mod(){
+    baritone = Client.getMod("baritone")
+    dh = Client.getMod("double_hotbar")
+    tweakeroo = Client.getMod("tweakeroo")
+    cc = Client.getMod("clientcommands")
+    if (baritone && dh && tweakeroo && cc) return
+    print("!! 模组未完全安装")
+    stop()
+}
+
+
+function stop(){
+    Chat.log("==  结  束  ==")
+    Chat.log("==  结  束  ==")
+    Chat.log("==  结  束  ==")
+    null.正在使用报错退出()
+}
+
+
+function is_jump(){
+    //return Player.getPlayer().input.jumping
+    return Player.getCurrentPlayerInput().jumping
+}
+
+// 获取一定tick内（以tick为单位）跳跃了多少次
+function jump_count(tick){
+    // while (1){
+        // Chat.log(is_jump())
+        // Time.sleep(50)
+    // }
+    jumped = 0
+    jumped_count = 0
+    ms = tick * 50
+    while(ms > 0){
+        if (is_jump() && !jumped) {
+            jumped = 1
+            jumped_count ++
+        }
+        if (!is_jump()) {
+            jumped = 0
+        }
+        Time.sleep(1)
+        ms --
+    }
+    return jumped_count
+}
+
+function wait_for_jump(need_count=2){
+    jumped = 0
+    while (need_count > 0){
+        if (is_jump() && !jumped) {
+            jumped = 1
+            need_count --
+        }
+        if (!is_jump()) {
+            jumped = 0
+        }
+        Time.sleep(1)
+    }
+    Time.sleep(50)
+}
+
+function is_near_block(x, y, z){
+    pos = Player.getPlayer().getPos()
+    //Chat.log(pos.getY() - (y + 1) == 0.0)
+    //Chat.log(Math.abs(pos.getX() - (x + 0.5)))
+    //Chat.log(Math.abs(pos.getZ() - (z + 0.5)))
+    if (pos.getY() - (y + 1) != 0.0) return false
+    if (Math.abs(pos.getX() - (x + 0.5)) > 0.2 || Math.abs(pos.getZ() - (z + 0.5)) > 0.2) return false
+    return true
+}
+
+function set_origin(){
+    original_block = Player.getPlayer().rayTraceBlock(8,false)
+    if (original_block == null || original_block.getX() != 3754396 || original_block.getY() != 3 || original_block.getId() != "minecraft:crafting_table"){
+        Chat.log("!! 初始方块错误！！")
+        stop()
+    }
+    Chat.say("/cglow block 3754396 4 " + original_block.getZ() + " 3")
+    Goto
+}
+
+function action_switch(force = 0){
+    if (!force) pause()
+    if (force) stop()
+}
+
+function is_looking_down(){
+    //Todo
+}
+
+function check_player_status(force = 0){
+    if (Player.getPlayer().getPos().getY() != 4.0) {
+        Chat.log("!! 玩家坐标有误!")
+        action_switch(force)
+    }
+}
+
+function must_is_null(){
+    return Player.rayTraceBlock(8,false)==null && Player.rayTraceBlock(8,false)==null && Player.rayTraceBlock(8,false)==null && Player.rayTraceBlock(8,false)==null && Player.rayTraceBlock(8,false)==null && Player.rayTraceBlock(8,false)==null && Player.rayTraceBlock(8,false)==null && Player.rayTraceBlock(8,false)==null && Player.rayTraceBlock(8,false)==null && Player.rayTraceBlock(8,false)==null
+}
+
+function maybe_is(id){
+    return Player.rayTraceBlock(8,false).getId()==id || Player.rayTraceBlock(8,false).getId()==id || Player.rayTraceBlock(8,false).getId()==id || Player.rayTraceBlock(8,false).getId()==id || Player.rayTraceBlock(8,false).getId()==id || Player.rayTraceBlock(8,false).getId()==id || Player.rayTraceBlock(8,false).getId()==id || Player.rayTraceBlock(8,false).getId()==id || Player.rayTraceBlock(8,false).getId()==id || Player.rayTraceBlock(8,false).getId()==id
+}
+
+function pause(){
+    Chat.log("@@ 出现故障 已暂停")
+    Chat.log("@@ 出现故障 已暂停")
+    Chat.log("@@ 请*排*查*完*故*障*后*手动走到初始方块并跳跃两次")
+    while(!is_near_block(original_block.getX(), original_block.getY(), original_block.getZ())){
+        Time.sleep(50)
+    }
+    wait_for_jump()
+}
+
 function Goto(dx,dy,dz,xx,yy,zz)//dx dy dz坐标xx yy zz偏移量
 {
     gb_tt=Player.getPlayer().getPos()
@@ -90,9 +274,27 @@ function exit()
     exit_=null
     exit_.getId()
 }
+
+function phase0(){
+    self_description()
+    warn()
+    check_player_status(1)
+    check_mod()
+    set_origin()
+}
+
+function main(){
+    // Chat.log(jump_count(40))
+    // Chat.log(is_near_block(3754395, 3, -3751075))
+    phase0()
+}
 //初始化开始点
 ////////////////////////////////////////////////////////////////////////////////
 //程序的开始
+
+main()
+stop()
+
 gb=Player.rayTraceBlock(8,false)
 if(gb==null)
 {
