@@ -9,6 +9,7 @@ function self_description(){
         Chat.log("WARNING:THIS IS A ALPHA VERSION!!")
         Chat.log("WARNING:THIS IS A ALPHA VERSION!!")
         Time.sleep(1000)
+        Chat.log()
     }
 
     Chat.log("Tip:Log Format:##[INFO]  @@[WARN]  !![ERROR]")
@@ -19,6 +20,7 @@ function self_description(){
     Chat.log("(Fork from V3Rev1, made by _XuanMing_, contributed by frsFallingSand)")
     Chat.log("[Build id 1 - Date 2025/10/04]")
     Time.sleep(1000)
+    Chat.log()
 }
 
 
@@ -188,6 +190,28 @@ function pause(){
     wait_for_jump()
 }
 
+function look_at_lever() {Chat.say("/clook angles -1117.77 65.59")}
+
+
+
+function phase_info(){
+    Chat.log("##########################################")
+    Chat.log("## 模式选择（站在对应高亮方块上）")
+    Chat.log("## 1.放置黑曜石框架")
+    Chat.log("## 2.切门")
+    Chat.log("## 3.挖黑曜石框架")
+    Chat.log("## 4.换底")
+    Chat.log("## 如要在每次切换模式时暂停 请将头完全低下再跳跃")
+    Chat.log("## 跳跃两次以启动对应的模式及其以下模式")
+    Chat.log("##########################################")
+}
+
+
+
+
+
+
+
 function Goto(dx,dy,dz,xx,yy,zz)//dx dy dz坐标xx yy zz偏移量
 {
     gb_tt=Player.getPlayer().getPos()
@@ -289,6 +313,7 @@ function phase0(){
     check_player_status(1)
     check_mod()
     set_origin()
+    phase_info()
 }
 
 function main(){
