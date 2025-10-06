@@ -521,6 +521,155 @@ function phase1(){
 
 
 
+function phase2(){
+    pos=0
+    flag=0
+    flag1=0
+    dx = obx - 5
+    dy = oby + 1
+    dz = obz
+    while(1)
+    {
+        dx-=21
+        if(Goto(dx,dy,dz))
+            break
+        KeyBind.keyBind("key.hotbar.2",true)
+        Chat.say("/clook angles 0.0 68.7")
+        Time.sleep(100)
+        if(Player.rayTraceBlock(8,false).getY()==1)//检测是否合法,如果不合法输出三个有个问题并强制结束(用空指针)
+        {
+            Chat.log("特殊情况")
+            flag1=1
+            break
+        }
+        KeyBind.keyBind("key.use",true)
+        KeyBind.keyBind("key.use",false)
+        Time.sleep(100)
+        Chat.say("/clook angles 0.0 64.1")
+        KeyBind.keyBind("key.use",true)
+        KeyBind.keyBind("key.use",false)
+        Time.sleep(100)
+        Chat.say("/clook angles 0.0 57.3")
+        KeyBind.keyBind("key.use",true)
+        KeyBind.keyBind("key.use",false)
+        Time.sleep(100)
+        if(Goto(dx+1,dy,dz))
+            break
+        KeyBind.keyBind("key.hotbar.3",true)
+        Chat.say("/clook angles 0.0 68.7")
+        KeyBind.keyBind("key.use",true)
+        KeyBind.keyBind("key.use",false)
+        Chat.say("/clook angles 0.0 64.1")
+        Time.sleep(700)
+        if(Player.rayTraceBlock(8,false).getId()!="minecraft:nether_portal")//检测是否合法,如果不合法输出三个有个问题并强制结束(用空指针)
+        {
+            Chat.log("有问题!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            Chat.log("有问题!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            Chat.log("有问题!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            flag=1
+            break
+        }
+        Time.sleep(100)
+        Chat.say("/clook angles 25.3 54.7")
+        while(Player.rayTraceBlock(8,false).getId()!="minecraft:powered_rail") 
+        {
+                Attack()
+                Time.sleep(100)
+        }
+        Time.sleep(400)
+        KeyBind.keyBind("key.hotbar.2",true)
+        Time.sleep(100)
+        Chat.say("/clook angles 0.0 68.7")
+        KeyBind.keyBind("key.use",true)
+        KeyBind.keyBind("key.use",false)
+        Time.sleep(100)
+        Chat.say("/clook angles 0.0 64.1")
+        KeyBind.keyBind("key.use",true)
+        KeyBind.keyBind("key.use",false)
+        Time.sleep(100)
+        Chat.say("/clook angles 0.0 57.3")
+        KeyBind.keyBind("key.use",true)
+        KeyBind.keyBind("key.use",false)
+        Time.sleep(100)
+        if(Goto(dx,dy,dz))
+            break
+        Chat.say("/clook angles 0.0 57.3")
+        Time.sleep(100)
+        pos++
+    }
+    if(flag==1)
+    {
+        pause()
+    }
+    Chat.log("到头了")
+    //处理最后一条
+    nw=Player.getPlayer().getPos()
+    nx=Math.floor(nw.getX())
+    ny=nw.getY()
+    nz=Math.floor(nw.getZ())
+    Chat.log(nx)
+    Chat.log(ny)
+    Chat.log(nz)
+    Goto1(nx,ny,nz)
+    if(flag1==0)//非为21倍数的特殊情况
+        Goto1(nx+2,ny,nz,xx,yy,zz)
+    else
+        Goto1(nx+1,ny,nz,xx,yy,zz)
+    KeyBind.keyBind("key.hotbar.3",true)
+    Chat.say("/clook angles 0.0 68.7")
+    KeyBind.keyBind("key.use",true)
+    KeyBind.keyBind("key.use",false)
+    Chat.say("/clook angles 0.0 64.1")
+    Time.sleep(700)
+    if(Player.rayTraceBlock(8,false).getId()!="minecraft:nether_portal")//检测是否合法,如果不合法输出三个有个问题并强制结束(用空指针)
+    {
+        Chat.log("有问题!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        Chat.log("有问题!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        Chat.log("有问题!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        exit()
+    }
+    Time.sleep(100)
+    Chat.say("/clook angles 25.3 54.7")
+    while(Player.rayTraceBlock(8,false).getId()!="minecraft:powered_rail") 
+    {
+            Attack()
+            Time.sleep(100)
+    }
+    //往回走&&处理上面两个
+    //寻找第一个
+    pos++
+    while(pos--)
+    {
+        Chat.say("/clook angles 0.0 57.3")
+        Time.sleep(100)
+        Chat.log(pos)
+        Check_first_obsidian(nx,ny,nz,xx,yy,zz)
+        Chat.say("/clook angles 25.3 54.7")
+        Time.sleep(100)
+        nlk=Player.rayTraceBlock(8,false)
+        npos=Player.getPlayer().getPos();
+        if(nlk.getId()!="minecraft:obsidian" || (nlk.getId()=="minecraft:obsidian" && nlk.getY()!=3))//要不要往前走一格
+        {
+            Chat.log(npos.getX())
+            Chat.log(npos.getY())
+            Chat.log(npos.getZ())
+            //exit=null
+            //exit.getId();
+            Goto1(npos.getX()+1,npos.getY(),npos.getZ(),0,0,0)
+        }
+        Chat.say("/clook angles 25.3 54.7")
+        Time.sleep(100)
+        while(Player.rayTraceBlock(8,false).getId()!="minecraft:powered_rail") 
+        {
+            Attack()
+            Time.sleep(100)
+        }
+        Chat.log(Player.rayTraceBlock(8,false).getId())
+    }
+}
+
+
+
 
 
 
