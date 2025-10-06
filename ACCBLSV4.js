@@ -64,6 +64,7 @@ function warn(){
     Time.sleep(delay_ms)
     Chat.log("@@ 9.请在支链最远端最后一个顶黑曜石的右下一格放置一个熔炉以定位")
     Time.sleep(delay_ms)
+    Chat.log("@@ 10.使用脚本时需确保外在环境安全！！同时双手离开键盘鼠标除非脚本已暂停")
     Chat.log("@@ 在2s内跳跃两次以确认我已阅读并且使用此脚本产生的全部责任均由您承担")
     if(!bypass_confirm) Chat.log("@@ 如您想跳过确认与延迟 请将脚本第一行的“0”修改为“1”")
     //Chat.log(Client.getLoadedMods())
@@ -225,14 +226,96 @@ function phase_info(){
     Time.sleep(2000)
 
     Chat.log("## 如要在每次切换模式时暂停 请将头完全低下再跳跃")
-    Chat.log("## 跳跃两次以启动对应的模式及其以下模式")
+    Chat.log("## 跳跃一次以启动对应的模式及其以下模式")
     Chat.log("##########################################")
 }
 
 function phase_select(){
-    while(is_near_block()){
+    phase_num = 0
+    // global:pause_mode = 0
+    pause_end = 0
+
+    outside = 0
+    //上升沿触发函数，订阅事件查询函数， *下降沿触发函数
+    function rs(trigger_up, subscribe, trigger_down){
+        if (!outside && subscribe()){
+            outside = 1
+            trigger_up()
+        }
+        if (outside && !subscribe()){
+            outside = 0
+            if (trigger_down != null) trigger_down()
+        }
+        return outside
+    }
+
+    function pause_trigger_up() {Chat.log("## 已启用暂停模式")}
+    function pause_trigger_down() {Chat.log("## 已禁用暂停模式")}
+
+    function pause_rs() {pause_end = rs(pause_trigger_up, is_looking_down, pause_trigger_down)}
+
+    function not_at_at_all() {return !is_near_block(3754396, 3, obz-1) && !is_near_block(3754395, 3, obz-1) && !is_near_block(3754395, 3, obz-2) && !is_near_block(3754395, 3, obz-3)}
+
+    //[左右/上下]全部顺序对应 P1 - P4
+    while(true){
+        pause_rs()
+
+        if (phase_num != 1 && is_near_block(3754396, 3, obz-1)) {
+            Chat.log("已选择模式1")
+            phase_num = 1
+            switch_end = 1
+        }
+        if (phase_num != 2 && is_near_block(3754395, 3, obz-1)){
+            Chat.log("已选择模式2")
+            phase_num = 2
+            switch_end = 1
+        }
+        if (phase_num != 3 && is_near_block(3754395, 3, obz-2)){
+            Chat.log("已选择模式3")
+            phase_num = 3
+            switch_end = 1
+        }
+        if (phase_num != 4 && is_near_block(3754395, 3, obz-3)){
+            Chat.log("已选择模式4")
+            phase_num = 4
+            switch_end = 1
+        }
+        if ((phase_num == 1 || phase_num == 2 || phase_num == 3 || phase_num == 4) && not_at_at_all()){
+            Chat.log("已退出模式选择")
+            phase_num = 0
+            switch_end = 0
+        }
+        if (jump_count(1)){
+            Chat.log("你的选择是：" + phase_num)
+            if (phase_num != 1 && phase_num != 2 && phase_num != 3 && phase_num != 4){
+                stop()
+            }
+            if (phase_num = 1){
+                pause_mode = pause_end
+                print("@@ 在脚本警告要求的基础上")
+                print("@@ 严禁在场地中脚本要放置的方块位置防止多余方块（脚本不会判断这里是否已有方块） 顶部预铺设的除外")
+                phase1()
+            }
+            if (phase_num = 2){
+                pause_mode = pause_end
+                print("@@ 在脚本警告要求的基础上")
+                print("@@ 确保除了脚本放置的拉杆之外没有其他会使链子不正常工作的方块")
+                phase2()
+            }
+            if (phase_num = 3){
+                pause_mode = pause_end
+                print("@@ 在脚本警告要求的基础上")
+                print("@@ 无其他额外要求")
+                phase3()
+            }
+            if (phase_num = 4){
+                pause_mode = pause_end
+                print("@@ 在脚本警告要求的基础上")
+                print("@@ 严禁在场地中脚本要放置的方块位置防止多余方块（脚本不会判断这里是否已有方块）")
+                phase4()
+            }
+        }
         
-        Time.sleep(50)
     }
 }
 
@@ -343,7 +426,7 @@ function phase0(){
     check_mod()
     set_origin()
     phase_info()
-    // phase_select()
+    phase_select()
 }
 
 function main(){
