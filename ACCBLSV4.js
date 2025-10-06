@@ -205,25 +205,31 @@ function look_at_lever() {Chat.say("/clook angles -1117.77 65.59")}
 
 
 function phase_info(){
+    delay = 1
+    if (bypass_confirm){
+        delay = 0
+    }
+    delay_ms = delay * 2000
+
     Chat.say("/clook angles -1996.28 32.82")
     Chat.log("##########################################")
     Chat.log("## 模式选择（站在对应高亮方块上）")
 
     Chat.say("/cglow block 3754396 4 " + (obz - 1) + " 2")
     Chat.log("## 1.放置黑曜石框架")
-    Time.sleep(2000)
+    Time.sleep(delay_ms)
 
     Chat.say("/cglow block 3754395 4 " + (obz - 1) + " 2")
     Chat.log("## 2.切门")
-    Time.sleep(2000)
+    Time.sleep(delay_ms)
 
     Chat.say("/cglow block 3754395 4 " + (obz - 2) + " 2")
     Chat.log("## 3.挖黑曜石框架")
-    Time.sleep(2000)
+    Time.sleep(delay_ms)
 
     Chat.say("/cglow block 3754395 4 " + (obz - 3) + " 2")
     Chat.log("## 4.换底")
-    Time.sleep(2000)
+    Time.sleep(delay_ms)
 
     Chat.log("## 如要在每次切换模式时暂停 请将头完全低下再跳跃")
     Chat.log("## 跳跃一次以启动对应的模式及其以下模式")
@@ -261,32 +267,32 @@ function phase_select(){
         pause_rs()
 
         if (phase_num != 1 && is_near_block(3754396, 3, obz-1)) {
-            Chat.log("已选择模式1")
+            Chat.log("## 已选择模式1")
             phase_num = 1
             switch_end = 1
         }
         if (phase_num != 2 && is_near_block(3754395, 3, obz-1)){
-            Chat.log("已选择模式2")
+            Chat.log("## 已选择模式2")
             phase_num = 2
             switch_end = 1
         }
         if (phase_num != 3 && is_near_block(3754395, 3, obz-2)){
-            Chat.log("已选择模式3")
+            Chat.log("## 已选择模式3")
             phase_num = 3
             switch_end = 1
         }
         if (phase_num != 4 && is_near_block(3754395, 3, obz-3)){
-            Chat.log("已选择模式4")
+            Chat.log("## 已选择模式4")
             phase_num = 4
             switch_end = 1
         }
         if ((phase_num == 1 || phase_num == 2 || phase_num == 3 || phase_num == 4) && not_at_at_all()){
-            Chat.log("已退出模式选择")
+            Chat.log("## 已退出模式选择")
             phase_num = 0
             switch_end = 0
         }
         if (jump_count(1)){
-            Chat.log("你的选择是：" + phase_num)
+            Chat.log("## 你的选择是：" + phase_num)
             if (phase_num != 1 && phase_num != 2 && phase_num != 3 && phase_num != 4){
                 stop()
             }
@@ -295,18 +301,24 @@ function phase_select(){
                 print("@@ 在脚本警告要求的基础上")
                 print("@@ 严禁在场地中脚本要放置的方块位置防止多余方块（脚本不会判断这里是否已有方块） 顶部预铺设的除外")
                 phase1()
+                if (pause_mode) pause()
+                phase_num = 2
             }
             if (phase_num = 2){
                 pause_mode = pause_end
                 print("@@ 在脚本警告要求的基础上")
                 print("@@ 确保除了脚本放置的拉杆之外没有其他会使链子不正常工作的方块")
                 phase2()
+                if (pause_mode) pause()
+                phase_num = 3
             }
             if (phase_num = 3){
                 pause_mode = pause_end
                 print("@@ 在脚本警告要求的基础上")
                 print("@@ 无其他额外要求")
                 phase3()
+                if (pause_mode) pause()
+                phase_num = 4
             }
             if (phase_num = 4){
                 pause_mode = pause_end
@@ -321,11 +333,11 @@ function phase_select(){
 
 
 
-
-
-
-function Goto(dx,dy,dz,xx,yy,zz)//dx dy dz坐标xx yy zz偏移量
+function Goto(dx,dy,dz,xx = 0.5,yy = 0,zz = 0.5)//dx dy dz坐标xx yy zz偏移量
 {
+    // if (xx == null) xx == 0.5
+    // if (yy == null) yy == 0.5
+    // if (zz == null) zz == 0.5
     gb_tt=Player.getPlayer().getPos()
     Chat.say("#goto "+dx.toString()+" "+dy.toString()+" "+dz.toString())
     while(Math.abs(gb_tt.getX()-dx-xx)>0.4 || Math.abs(gb_tt.getZ()-dz-zz)>0.4 || Math.abs(gb_tt.getY()-dy)>0)
@@ -347,8 +359,11 @@ function Goto(dx,dy,dz,xx,yy,zz)//dx dy dz坐标xx yy zz偏移量
     Player.getPlayer().setPos(dx+xx,dy,dz+zz)
     return 0
 }
-function Goto1(dx,dy,dz,xx,yy,zz)//dx dy dz坐标xx yy zz偏移量
+function Goto1(dx,dy,dz,xx = 0.5,yy = 0,zz = 0.5)//dx dy dz坐标xx yy zz偏移量
 {
+    // if (xx == null) xx == 0.5 Shit
+    // if (yy == null) yy == 0.5
+    // if (zz == null) zz == 0.5
     gb_tt=Player.getPlayer().getPos()
     Chat.say("#goto "+dx.toString()+" "+dy.toString()+" "+dz.toString())
     while(Math.abs(gb_tt.getX()-dx-xx)>0.4 || Math.abs(gb_tt.getZ()-dz-zz)>0.4 || Math.abs(gb_tt.getY()-dy)>0)
@@ -428,6 +443,86 @@ function phase0(){
     phase_info()
     phase_select()
 }
+
+
+
+function lock_chain(){
+    Time.sleep(100)
+    KeyBind.keyBind("key.hotbar.6",true)
+    KeyBind.keyBind("key.use",true)
+    KeyBind.keyBind("key.use",false)
+    Time.sleep(100)
+    KeyBind.keyBind("key.use",true)
+    KeyBind.keyBind("key.use",false)
+    Time.sleep(1000)
+    if(Player.rayTraceBlock(8,false).getId()!="minecraft:lever")
+    {
+        Chat.log("!! 拉杆未成功放置")
+        stop()
+    }
+    Time.sleep(500)
+}
+
+
+function hardcore_place_framework_side(){
+    // Goto1(obx - 5, oby + 1, obz, 0.5, 0, 0.89)
+    Time.sleep(500)
+    Chat.say("/clook angles 0 65.17")
+    KeyBind.keyBind("key.hotbar.2",true)
+    Time.sleep(500)
+    KeyBind.keyBind("key.use",true)
+    KeyBind.keyBind("key.use",false)
+    Time.sleep(500)
+    KeyBind.keyBind("key.use",true)
+    KeyBind.keyBind("key.use",false)
+    Time.sleep(500)
+    KeyBind.keyBind("key.use",true)
+    KeyBind.keyBind("key.use",false)
+}
+
+
+function place_bottom_obsidian(){
+    x = obx - 6
+    // Goto(x + 1, oby + 1, obz, 0.1, 0, 0.5)
+    while(Goto(x,oby + 1, obz) != 1){
+        Chat.say("/clook angles 0.0 62.6")
+        Time.sleep(100)
+        KeyBind.keyBind("key.sneak",true)
+        Time.sleep(100)
+        KeyBind.keyBind("key.use",true)
+        KeyBind.keyBind("key.use",false)
+        Time.sleep(100)
+        KeyBind.keyBind("key.sneak",false)
+        Chat.say("/clook angles 43.8 41.4")
+        Time.sleep(100)
+        x--
+    }
+    Chat.say("/clook angles 0.0 62.6")
+    Time.sleep(100)
+    KeyBind.keyBind("key.use",true)
+    KeyBind.keyBind("key.use",false)
+    return x
+}
+
+
+function phase1(){
+    goto_origin()
+    look_at_lever()
+    lock_chain()
+    Goto1(obx - 5, oby + 1, obz, 0.5, 0, 0.89)
+    hardcore_place_framework_side()
+    end_x = place_bottom_obsidian()
+    Goto1(end_x - 1, oby + 1, obz, 0.5, 0, 0.89)
+    hardcore_place_framework_side()
+    Goto1(obx, oby + 1, obz)
+}
+
+
+
+
+
+
+
 
 function main(){
     // Chat.log(jump_count(40))
