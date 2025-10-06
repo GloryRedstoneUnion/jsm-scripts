@@ -81,7 +81,7 @@ function check_mod(){
     tweakeroo = Client.getMod("tweakeroo")
     cc = Client.getMod("clientcommands")
     if (baritone && dh && tweakeroo && cc) return
-    print("!! 模组未完全安装")
+    Chat.log("!! 模组未完全安装")
     stop()
 }
 
@@ -237,6 +237,7 @@ function phase_info(){
 }
 
 function phase_select(){
+    need_break = 0
     phase_num = 0
     // global:pause_mode = 0
     pause_end = 0
@@ -263,67 +264,64 @@ function phase_select(){
     function not_at_at_all() {return !is_near_block(3754396, 3, obz-1) && !is_near_block(3754395, 3, obz-1) && !is_near_block(3754395, 3, obz-2) && !is_near_block(3754395, 3, obz-3)}
 
     //[左右/上下]全部顺序对应 P1 - P4
-    while(true){
+    while(!need_break){
         pause_rs()
 
         if (phase_num != 1 && is_near_block(3754396, 3, obz-1)) {
             Chat.log("## 已选择模式1")
             phase_num = 1
-            switch_end = 1
         }
         if (phase_num != 2 && is_near_block(3754395, 3, obz-1)){
             Chat.log("## 已选择模式2")
             phase_num = 2
-            switch_end = 1
         }
         if (phase_num != 3 && is_near_block(3754395, 3, obz-2)){
             Chat.log("## 已选择模式3")
             phase_num = 3
-            switch_end = 1
         }
         if (phase_num != 4 && is_near_block(3754395, 3, obz-3)){
             Chat.log("## 已选择模式4")
             phase_num = 4
-            switch_end = 1
         }
         if ((phase_num == 1 || phase_num == 2 || phase_num == 3 || phase_num == 4) && not_at_at_all()){
             Chat.log("## 已退出模式选择")
             phase_num = 0
-            switch_end = 0
         }
         if (jump_count(1)){
+            need_break = 1
             Chat.log("## 你的选择是：" + phase_num)
+            Time.sleep(500)
             if (phase_num != 1 && phase_num != 2 && phase_num != 3 && phase_num != 4){
                 stop()
             }
-            if (phase_num = 1){
+            if (phase_num == 1){
                 pause_mode = pause_end
-                print("@@ 在脚本警告要求的基础上")
-                print("@@ 严禁在场地中脚本要放置的方块位置防止多余方块（脚本不会判断这里是否已有方块） 顶部预铺设的除外")
+                Chat.log("@@ 在脚本警告要求的基础上")
+                Chat.log("@@ 严禁在场地中脚本要放置的方块位置防止多余方块（脚本不会判断这里是否已有方块） 顶部预铺设的除外")
                 phase1()
                 if (pause_mode) pause()
                 phase_num = 2
             }
-            if (phase_num = 2){
+            if (phase_num == 2){
                 pause_mode = pause_end
-                print("@@ 在脚本警告要求的基础上")
-                print("@@ 确保除了脚本放置的拉杆之外没有其他会使链子不正常工作的方块")
+                Chat.log("@@ 在脚本警告要求的基础上")
+                Chat.log("@@ 确保除了脚本放置的拉杆之外没有其他会使链子不正常工作的方块")
                 phase2()
                 if (pause_mode) pause()
                 phase_num = 3
             }
-            if (phase_num = 3){
+            if (phase_num == 3){
                 pause_mode = pause_end
-                print("@@ 在脚本警告要求的基础上")
-                print("@@ 无其他额外要求")
+                Chat.log("@@ 在脚本警告要求的基础上")
+                Chat.log("@@ 无其他额外要求")
                 phase3()
                 if (pause_mode) pause()
                 phase_num = 4
             }
-            if (phase_num = 4){
+            if (phase_num == 4){
                 pause_mode = pause_end
-                print("@@ 在脚本警告要求的基础上")
-                print("@@ 严禁在场地中脚本要放置的方块位置防止多余方块（脚本不会判断这里是否已有方块）")
+                Chat.log("@@ 在脚本警告要求的基础上")
+                Chat.log("@@ 严禁在场地中脚本要放置的方块位置防止多余方块（脚本不会判断这里是否已有方块）")
                 phase4()
             }
         }
