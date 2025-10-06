@@ -193,11 +193,31 @@ function maybe_is(id){
 function pause(){
     Chat.log("@@ 出现故障 已暂停！！")
     Chat.log("@@ 出现故障 已暂停！！")
-    Chat.log("@@ 请手动*排*查*完*故*障*后*并确认在脚本暂停的位置和状态后跳跃两次")
-    while(!is_near_block(original_block.getX(), original_block.getY(), original_block.getZ())){
-        Time.sleep(50)
+    Chat.log("@@ 请手动*排*查*完*故*障*后*并确认在脚本暂停的位置和状态后短时间内跳跃三次")
+    first = 0
+    delta = 0
+    while(1){
+        jump = wait_for_jump(2)
+        if (jump && !first) {
+            first = 1
+            Chat.log("## 跳跃三次")
+            Time.sleep(60)
+        }
+
+        if (delta > 40){
+            delta = 0
+            first = 0
+            Chat.log("## 超时")
+        }
+
+        if (first = 1){
+            jump2 = wait_for_jump(1)
+            delta ++
+        }
+
+        if (jump2) break
     }
-    wait_for_jump()
+    Time.sleep(1000)
 }
 
 function look_at_lever() {Chat.say("/clook angles -1117.77 65.59")}
@@ -290,7 +310,7 @@ function phase_select(){
         if (jump_count(1)){
             need_break = 1
             Chat.log("## 你的选择是：" + phase_num)
-            Time.sleep(500)
+            Time.sleep(1000)
             if (phase_num != 1 && phase_num != 2 && phase_num != 3 && phase_num != 4){
                 stop()
             }
@@ -538,8 +558,9 @@ function phase2(){//来自_XuanMing_大佬
         if(Player.rayTraceBlock(8,false).getY()==1)//检测是否合法,如果不合法输出三个有个问题并强制结束(用空指针)
         {
             Chat.log("特殊情况")
-            flag1=1
-            break
+            pause()
+            // flag1=1
+            // break
         }
         KeyBind.keyBind("key.use",true)
         KeyBind.keyBind("key.use",false)
@@ -565,8 +586,9 @@ function phase2(){//来自_XuanMing_大佬
             Chat.log("有问题!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
             Chat.log("有问题!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
             Chat.log("有问题!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            flag=1
-            break
+            // flag=1
+            pause()
+            // break
         }
         Time.sleep(100)
         Chat.say("/clook angles 25.3 54.7")
@@ -625,7 +647,7 @@ function phase2(){//来自_XuanMing_大佬
         Chat.log("有问题!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         Chat.log("有问题!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         Chat.log("有问题!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-        exit()
+        pause()
     }
     Time.sleep(100)
     Chat.say("/clook angles 25.3 54.7")
