@@ -401,9 +401,9 @@ function Chack(p)
 }
 function Check_first_obsidian(dx,dy,dz,xx,yy,zz)
 {
-    dx-=23
+    dx+=23
     nw=Player.rayTraceBlock(8,false)
-    Chat.say("#goto "+(nx-23).toString()+" "+ny.toString()+" "+nz.toString())
+    Chat.say("#goto "+(nx+23).toString()+" "+ny.toString()+" "+nz.toString())
     while(Chack(nw))
     {
         nw=Player.rayTraceBlock(8,false)
@@ -519,11 +519,12 @@ function phase1(){
 
 
 
-function phase2(){
+function phase2(){//来自_XuanMing_大佬
+    xx = yy = zz = 0.5
     pos=0
     flag=0
     flag1=0
-    dx = obx - 5
+    dx = obx - 6
     dy = oby + 1
     dz = obz
     while(1)
@@ -542,15 +543,15 @@ function phase2(){
         }
         KeyBind.keyBind("key.use",true)
         KeyBind.keyBind("key.use",false)
-        Time.sleep(100)
+        Time.sleep(200)
         Chat.say("/clook angles 0.0 64.1")
         KeyBind.keyBind("key.use",true)
         KeyBind.keyBind("key.use",false)
-        Time.sleep(100)
+        Time.sleep(200)
         Chat.say("/clook angles 0.0 57.3")
         KeyBind.keyBind("key.use",true)
         KeyBind.keyBind("key.use",false)
-        Time.sleep(100)
+        Time.sleep(200)
         if(Goto(dx+1,dy,dz))
             break
         KeyBind.keyBind("key.hotbar.3",true)
@@ -580,15 +581,15 @@ function phase2(){
         Chat.say("/clook angles 0.0 68.7")
         KeyBind.keyBind("key.use",true)
         KeyBind.keyBind("key.use",false)
-        Time.sleep(100)
+        Time.sleep(200)
         Chat.say("/clook angles 0.0 64.1")
         KeyBind.keyBind("key.use",true)
         KeyBind.keyBind("key.use",false)
-        Time.sleep(100)
+        Time.sleep(200)
         Chat.say("/clook angles 0.0 57.3")
         KeyBind.keyBind("key.use",true)
         KeyBind.keyBind("key.use",false)
-        Time.sleep(100)
+        Time.sleep(200)
         if(Goto(dx,dy,dz))
             break
         Chat.say("/clook angles 0.0 57.3")
@@ -641,7 +642,7 @@ function phase2(){
         Chat.say("/clook angles 0.0 57.3")
         Time.sleep(100)
         Chat.log(pos)
-        Check_first_obsidian(nx,ny,nz,xx,yy,zz)
+        Check_first_obsidian(nx,ny,nz,0.5,0.5,0.5)
         Chat.say("/clook angles 25.3 54.7")
         Time.sleep(100)
         nlk=Player.rayTraceBlock(8,false)
