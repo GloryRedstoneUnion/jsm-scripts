@@ -2,6 +2,13 @@ bypass_confirm = 1
 breaker_name = "bot_breaker"
 
 original_block = null
+obx = null
+oby = null
+obz = null
+
+pause_mode = 0
+
+//TODO: 第一行release时记得改
 
 function self_description(){
     function alpha_warn(){
@@ -9,7 +16,6 @@ function self_description(){
         Chat.log("WARNING:THIS IS A ALPHA VERSION!!")
         Chat.log("WARNING:THIS IS A ALPHA VERSION!!")
         Time.sleep(1000)
-        Chat.log()
     }
 
     Chat.log("Tip:Log Format:##[INFO]  @@[WARN]  !![ERROR]")
@@ -20,7 +26,6 @@ function self_description(){
     Chat.log("(Fork from V3Rev1, made by _XuanMing_, contributed by frsFallingSand)")
     Chat.log("[Build id 1 - Date 2025/10/04]")
     Time.sleep(1000)
-    Chat.log()
 }
 
 
@@ -50,11 +55,11 @@ function warn(){
     Chat.log("@@ 5.名为bot_breaker的假人主手中应有稿子，如欲更改请更改脚本第二行变量")
     Time.sleep(delay_ms)
     Chat.log("@@ 6.携带足够的黑曜石、确保饱食度足够，脚本不会进行这方面的检测！")
+    Chat.log("@@ 6.以及，脚本只会基本地检测地狱门是否成功生成、链子有无熄灭")
     Time.sleep(delay_ms)
     Chat.log("@@ 7.为了安全，本脚本支持并建议启动伪潜行、装备鞘翅")
     Time.sleep(delay_ms)
     Chat.log("@@ 8.物品栏顺序:(1-6)稿子,黑曜石,点火装置,海龟蛋,岩浆块,拉杆")
-    Time.sleep(delay_ms)
     Chat.log("@@ 8.物品栏顺序:(倒数第二列3-6)粘液块,红石块,活塞,粘性活塞")
     Time.sleep(delay_ms)
     Chat.log("@@ 9.请在支链最远端最后一个顶黑曜石的右下一格放置一个熔炉以定位")
@@ -148,6 +153,9 @@ function set_origin(){
         stop()
     }
     Chat.say("/cglow block 3754396 4 " + original_block.getZ() + " 3")
+    obx = original_block.getX()
+    oby = original_block.getY()
+    obz = original_block.getZ()
     goto_origin()
 }
 
@@ -157,12 +165,13 @@ function action_switch(force = 0){
 }
 
 function is_looking_down(){
-    //Todo
+    if (Player.getPlayer().getPitch() == 90.0) return 1
+    return 0
 }
 
 function goto_origin(){
-    Goto1(original_block.getX() - 1, original_block.getY() + 1, original_block.getZ(), 0.5, 0, 0.5)
-    Goto1(original_block.getX(), original_block.getY() + 1, original_block.getZ(), 0.5, 0, 0.5)
+    Goto1(obx - 1, oby + 1, obz, 0.5, 0, 0.5)
+    Goto1(obx, oby + 1, obz, 0.5, 0, 0.5)
 }
 
 function check_player_status(force = 0){
@@ -181,9 +190,9 @@ function maybe_is(id){
 }
 
 function pause(){
-    Chat.log("@@ 出现故障 已暂停")
-    Chat.log("@@ 出现故障 已暂停")
-    Chat.log("@@ 请*排*查*完*故*障*后*手动走到初始方块并跳跃两次")
+    Chat.log("@@ 出现故障 已暂停！！")
+    Chat.log("@@ 出现故障 已暂停！！")
+    Chat.log("@@ 请手动*排*查*完*故*障*后*并确认在脚本暂停的位置和状态后跳跃两次")
     while(!is_near_block(original_block.getX(), original_block.getY(), original_block.getZ())){
         Time.sleep(50)
     }
@@ -195,17 +204,37 @@ function look_at_lever() {Chat.say("/clook angles -1117.77 65.59")}
 
 
 function phase_info(){
+    Chat.say("/clook angles -1996.28 32.82")
     Chat.log("##########################################")
     Chat.log("## 模式选择（站在对应高亮方块上）")
+
+    Chat.say("/cglow block 3754396 4 " + (obz - 1) + " 2")
     Chat.log("## 1.放置黑曜石框架")
+    Time.sleep(2000)
+
+    Chat.say("/cglow block 3754395 4 " + (obz - 1) + " 2")
     Chat.log("## 2.切门")
+    Time.sleep(2000)
+
+    Chat.say("/cglow block 3754395 4 " + (obz - 2) + " 2")
     Chat.log("## 3.挖黑曜石框架")
+    Time.sleep(2000)
+
+    Chat.say("/cglow block 3754395 4 " + (obz - 3) + " 2")
     Chat.log("## 4.换底")
+    Time.sleep(2000)
+
     Chat.log("## 如要在每次切换模式时暂停 请将头完全低下再跳跃")
     Chat.log("## 跳跃两次以启动对应的模式及其以下模式")
     Chat.log("##########################################")
 }
 
+function phase_select(){
+    while(is_near_block()){
+        
+        Time.sleep(50)
+    }
+}
 
 
 
@@ -314,6 +343,7 @@ function phase0(){
     check_mod()
     set_origin()
     phase_info()
+    // phase_select()
 }
 
 function main(){
