@@ -1,4 +1,4 @@
-bypass_confirm = 1
+bypass_confirm = 0
 breaker_name = "bot_breaker"
 
 original_block = null
