@@ -1,4 +1,4 @@
-bypass_confirm = 0
+bypass_confirm = 1
 breaker_name = "bot_breaker"
 
 original_block = null
@@ -465,6 +465,7 @@ function phase0(){
 
 
 function lock_chain(){
+    bypass = 1
     Time.sleep(100)
     KeyBind.keyBind("key.hotbar.6",true)
     KeyBind.keyBind("key.use",true)
@@ -473,7 +474,7 @@ function lock_chain(){
     KeyBind.keyBind("key.use",true)
     KeyBind.keyBind("key.use",false)
     Time.sleep(1000)
-    if(Player.rayTraceBlock(8,false).getId()!="minecraft:lever")
+    if(!bypass && Player.rayTraceBlock(8,false).getId()!="minecraft:lever")
     {
         Chat.log("!! 拉杆未成功放置")
         stop()
