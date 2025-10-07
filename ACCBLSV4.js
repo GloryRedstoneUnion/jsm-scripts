@@ -325,7 +325,7 @@ function phase_select(){
             if (phase_num == 2){
                 pause_mode = pause_end
                 Chat.log("@@ 在脚本警告要求的基础上")
-                Chat.log("@@ 确保除了脚本放置的拉杆之外没有其他会使链子不正常工作的方块")
+                Chat.log("@@ 确保除了脚本放置的即将被破坏的拉杆之外没有其他会使链子不正常工作的方块")
                 phase2()
                 if (pause_mode) pause()
                 phase_num = 3
@@ -485,16 +485,16 @@ function lock_chain(){
 
 function hardcore_place_framework_side(){
     // Goto1(obx - 5, oby + 1, obz, 0.5, 0, 0.89)
-    Time.sleep(500)
+    Time.sleep(1000)
     Chat.say("/clook angles 0 65.17")
     KeyBind.keyBind("key.hotbar.2",true)
-    Time.sleep(500)
+    Time.sleep(1000)
     KeyBind.keyBind("key.use",true)
     KeyBind.keyBind("key.use",false)
-    Time.sleep(500)
+    Time.sleep(1000)
     KeyBind.keyBind("key.use",true)
     KeyBind.keyBind("key.use",false)
-    Time.sleep(500)
+    Time.sleep(1000)
     KeyBind.keyBind("key.use",true)
     KeyBind.keyBind("key.use",false)
 }
@@ -541,6 +541,12 @@ function phase1(){
 
 
 function phase2(){//来自_XuanMing_大佬
+    goto_origin()
+    look_at_lever()
+    KeyBind.keyBind("key.attack",true)
+    Time.sleep(2000)
+    KeyBind.keyBind("key.attack",false)
+
     xx = yy = zz = 0.5
     pos=0
     flag=0
