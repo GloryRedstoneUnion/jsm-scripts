@@ -1,5 +1,5 @@
 bypass_confirm = 1
-breaker_name = "bot_wa"
+breaker_name = "bot_breaker"
 
 original_block = null
 obx = null
@@ -765,7 +765,7 @@ function place_flyer(){
 }
 
 function bot_operation(){
-    Chat.say("/player bot_breaker spawn at " + (obx - 7.3) + " 5.0 "+ (obz + 2.5) + " facing 88.72 57.30")
+    Chat.say("/player " + breaker_name +" spawn at " + (obx - 7.3) + " 5.0 "+ (obz + 2.5) + " facing 88.72 57.30")
     Time.sleep(1000)
     Chat.say("/player bot_breaker attack continuous")
     Time.sleep(100)
