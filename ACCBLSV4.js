@@ -801,7 +801,45 @@ function phase3(){
 
 
 function phase4(){
-    
+    Goto1(obx - 5, oby + 1, obz)
+        for(;;)
+    {
+        KeyBind.keyBind("key.hotbar.4",true)
+        KeyBind.keyBind("key.sneak",true)
+        Chat.say("/clook angles 12.6 60.7")
+        Time.sleep(300)
+        if(CheckBlock())
+        {
+            KeyBind.keyBind("key.use",true)
+            KeyBind.keyBind("key.use",false)
+        }
+        else
+        {
+            KeyBind.keyBind("key.sneak",false)
+            break
+        }
+        Time.sleep(300)
+        KeyBind.keyBind("key.sneak",false)
+        px-=3
+        Goto1(px,py,pz,xx,yy,zz)
+        KeyBind.keyBind("key.sneak",true)
+        KeyBind.keyBind("key.hotbar.5",true)
+        Chat.say("/clook angles -12.6 60.7")
+        Time.sleep(400)
+        if(CheckBlock())
+        {
+            KeyBind.keyBind("key.use",true)
+            KeyBind.keyBind("key.use",false)
+        }
+        else
+        {
+            KeyBind.keyBind("key.sneak",false)
+            break
+        }
+        Time.sleep(200)
+        KeyBind.keyBind("key.sneak",false)
+        Time.sleep(900)
+    }
 }
 
 
@@ -810,6 +848,7 @@ function main(){
     // Chat.log(jump_count(40))
     // Chat.log(is_near_block(3754395, 3, -3751075))
     phase0()
+    Goto1(obx, oby + 1, obz)
 }
 //初始化开始点
 ////////////////////////////////////////////////////////////////////////////////
