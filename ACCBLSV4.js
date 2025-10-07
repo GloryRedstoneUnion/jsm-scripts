@@ -802,8 +802,10 @@ function phase3(){
 
 function phase4(){
     Goto1(obx - 5, oby + 1, obz)
-        for(;;)
-    {
+    px = obx - 5
+    py = oby + 1
+    pz = obz
+    for(;;){
         KeyBind.keyBind("key.hotbar.4",true)
         KeyBind.keyBind("key.sneak",true)
         Chat.say("/clook angles 12.6 60.7")
@@ -821,7 +823,7 @@ function phase4(){
         Time.sleep(300)
         KeyBind.keyBind("key.sneak",false)
         px-=3
-        Goto1(px,py,pz,xx,yy,zz)
+        Goto1(px,py,pz)
         KeyBind.keyBind("key.sneak",true)
         KeyBind.keyBind("key.hotbar.5",true)
         Chat.say("/clook angles -12.6 60.7")
