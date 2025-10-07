@@ -46,7 +46,7 @@ function warn(){
     Time.sleep(delay_ms)
     Chat.log("@@ 1.务必确保当前状态完全符合所选模式的状态要求，否则将不可避免地碎门")
     Time.sleep(delay_ms)
-    Chat.log("@@ 2.确保已安装mod:clientcommand、baritone、double_hotbar")
+    Chat.log("@@ 2.确保已安装mod:clientcommand、baritone")
     Time.sleep(delay_ms)
     Chat.log("@@ 3.切门前后请备份！切门千万条，备份第一条。pb忘记make，群友两行泪！")
     Time.sleep(delay_ms)
@@ -77,10 +77,9 @@ function warn(){
 
 function check_mod(){
     baritone = Client.getMod("baritone")
-    dh = Client.getMod("double_hotbar")
     tweakeroo = Client.getMod("tweakeroo")
     cc = Client.getMod("clientcommands")
-    if (baritone && dh && tweakeroo && cc) return
+    if (baritone && tweakeroo && cc) return
     Chat.log("!! 模组未完全安装")
     stop()
 }
