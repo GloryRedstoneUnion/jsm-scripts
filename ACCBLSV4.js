@@ -790,17 +790,17 @@ function cut_bottom_obsidian(){
     }
     // px+=1
     // Goto1(px,py,pz)
+    KeyBind.keyBind("key.attack",false)
 }
 
 function phase3(){
-    cut_bottom_obsidian()
-    stop()
     break_obsidian_for_bot()
     switch_hotbar()
     place_flyer()
     switch_hotbar()
     bot_operation()
     Goto1(obx - 5, oby + 1, obz)
+    cut_bottom_obsidian()
 }
 
 
