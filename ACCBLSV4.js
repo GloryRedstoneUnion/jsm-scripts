@@ -767,7 +767,7 @@ function place_flyer(){
 function bot_operation(){
     Chat.say("/player bot_breaker spawn at " + (obx - 7.3) + " 5.0 "+ (obz + 2.5) + " facing 88.72 57.30")
     Time.sleep(1000)
-    Chat.say("/player bot_breaker use continuous")
+    Chat.say("/player bot_breaker attack continuous")
     Time.sleep(100)
 }
 
