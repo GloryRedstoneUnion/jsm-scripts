@@ -135,6 +135,7 @@ function wait_for_jump(need_count=2){
         Time.sleep(1)
     }
     Time.sleep(50)
+    return 1
 }
 
 function is_near_block(x, y, z){
@@ -200,7 +201,7 @@ function pause(){
         jump = wait_for_jump(2)
         if (jump && !first) {
             first = 1
-            Chat.log("## 跳跃三次")
+            Chat.log("## 跳跃两次")
             Time.sleep(60)
         }
 
@@ -564,15 +565,15 @@ function phase2(){//来自_XuanMing_大佬
         }
         KeyBind.keyBind("key.use",true)
         KeyBind.keyBind("key.use",false)
-        Time.sleep(200)
+        Time.sleep(300)
         Chat.say("/clook angles 0.0 64.1")
         KeyBind.keyBind("key.use",true)
         KeyBind.keyBind("key.use",false)
-        Time.sleep(200)
+        Time.sleep(300)
         Chat.say("/clook angles 0.0 57.3")
         KeyBind.keyBind("key.use",true)
         KeyBind.keyBind("key.use",false)
-        Time.sleep(200)
+        Time.sleep(300)
         if(Goto(dx+1,dy,dz))
             break
         KeyBind.keyBind("key.hotbar.3",true)
@@ -603,15 +604,15 @@ function phase2(){//来自_XuanMing_大佬
         Chat.say("/clook angles 0.0 68.7")
         KeyBind.keyBind("key.use",true)
         KeyBind.keyBind("key.use",false)
-        Time.sleep(200)
+        Time.sleep(300)
         Chat.say("/clook angles 0.0 64.1")
         KeyBind.keyBind("key.use",true)
         KeyBind.keyBind("key.use",false)
-        Time.sleep(200)
+        Time.sleep(300)
         Chat.say("/clook angles 0.0 57.3")
         KeyBind.keyBind("key.use",true)
         KeyBind.keyBind("key.use",false)
-        Time.sleep(200)
+        Time.sleep(300)
         if(Goto(dx,dy,dz))
             break
         Chat.say("/clook angles 0.0 57.3")
@@ -690,7 +691,118 @@ function phase2(){//来自_XuanMing_大佬
 }
 
 
+function break_obsidian_for_bot(){
+    Goto1(obx - 6, oby + 1, obz, 0.5, 0, 0.89)
+    Chat.say("/clook angles 0 53.5")
+    Time.sleep(50)
+    Attack()
 
+    Goto1(obx - 7, oby + 1, obz, 0.5, 0, 0.89)
+    Chat.say("/clook angles 0 53.5")
+    Time.sleep(50)
+    Attack()
+
+    Goto1(obx - 8, oby + 1, obz, 0.2, 0, 0.89)
+    Chat.say("/clook angles 0 53.5")
+    Time.sleep(50)
+    Attack()
+
+    Time.sleep(200)
+    KeyBind.keyBind("key.attack",false)
+}
+
+function switch_hotbar(){
+    inv = Player.openInventory()
+    inv.swap(29,38)
+    Time.sleep(50)
+    inv.swap(30,39)
+    Time.sleep(50)
+    inv.swap(31,40)
+    Time.sleep(50)
+    inv.swap(32,41)
+    Time.sleep(50)
+}
+
+function place_flyer(){
+    Chat.say("/clook angles -51.90 17.42") //piston
+    KeyBind.keyBind("key.hotbar.5",true)
+    KeyBind.keyBind("key.hotbar.5",false)
+    Time.sleep(200)
+    KeyBind.keyBind("key.use",true)
+    KeyBind.keyBind("key.use",false)
+    Time.sleep(200)
+
+    Chat.say("/clook angles -35.44 20.38") //slime & redstone
+    KeyBind.keyBind("key.hotbar.3",true)
+    KeyBind.keyBind("key.hotbar.3",false)
+    Time.sleep(200)
+    KeyBind.keyBind("key.use",true)
+    KeyBind.keyBind("key.use",false)
+    Time.sleep(200)
+
+    KeyBind.keyBind("key.hotbar.4",true)
+    KeyBind.keyBind("key.hotbar.4",false)
+    Time.sleep(200)
+    KeyBind.keyBind("key.use",true)
+    KeyBind.keyBind("key.use",false)
+    Time.sleep(200)
+
+    Goto1(obx - 6, oby + 1, obz)
+    Time.sleep(200)
+    Chat.say("/clook angles 57.28 17.42")
+    KeyBind.keyBind("key.hotbar.6",true)
+    KeyBind.keyBind("key.hotbar.6",false)
+    Time.sleep(200)
+    KeyBind.keyBind("key.use",true)
+    KeyBind.keyBind("key.use",false)
+    Time.sleep(1000)
+}
+
+function bot_operation(){
+    Chat.say("/player bot_breaker spawn at " (obx + 8.5) + " " + (oby + 2) + (obz - 2.5) + " facing -269.52 57.93")
+    Time.sleep(100)
+    Chat.say("/player bot_breaker use continuous")
+    Time.sleep(100)
+}
+
+function cut_bottom_obsidian(){
+    px = obx - 6
+    py = oby + 1
+    pz = obz
+
+    Goto1(px,py,pz)
+    Chat.say("/clook angles 0 70")
+    Time.sleep(500)
+
+    while(Player.rayTraceBlock(8,false)!=null){
+        Time.sleep(500)
+        Attack()
+        px--
+        Goto1(px,py,pz)
+        Chat.say("/clook angles 0 70")
+        Time.sleep(100)
+    }
+    // px+=1
+    // Goto1(px,py,pz)
+}
+
+function phase3(){
+    cut_bottom_obsidian()
+    stop()
+    break_obsidian_for_bot()
+    switch_hotbar()
+    place_flyer()
+    switch_hotbar()
+    bot_operation()
+    Goto1(obx - 5, oby + 1, obz)
+}
+
+
+
+
+function phase4(){
+    
+}
 
 
 
