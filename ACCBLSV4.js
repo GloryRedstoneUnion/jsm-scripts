@@ -1,5 +1,5 @@
 bypass_confirm = 1
-breaker_name = "bot_breaker"
+breaker_name = "bot_wa"
 
 original_block = null
 obx = null
@@ -765,8 +765,8 @@ function place_flyer(){
 }
 
 function bot_operation(){
-    Chat.say("/player bot_breaker spawn at " (obx + 8.5) + " " + (oby + 2) + (obz - 2.5) + " facing -269.52 57.93")
-    Time.sleep(100)
+    Chat.say("/player bot_breaker spawn at " + (obx - 7.3) + " 5.0 "+ (obz + 2.5) + " facing 88.72 57.30")
+    Time.sleep(1000)
     Chat.say("/player bot_breaker use continuous")
     Time.sleep(100)
 }
@@ -801,6 +801,8 @@ function phase3(){
     bot_operation()
     Goto1(obx - 5, oby + 1, obz)
     cut_bottom_obsidian()
+    Goto1(obx - 5, oby + 1, obz)
+    Time.sleep(1000)
 }
 
 
