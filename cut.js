@@ -3,8 +3,8 @@ Time.sleep(3000)
 
 l = r = false
 
-l = true
-//r = true
+//l = true
+r = true
 empty = 0
 
 while (true){
