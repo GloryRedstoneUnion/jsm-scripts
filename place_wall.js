@@ -10,7 +10,11 @@ function must_is_null(){
 
 function maybe_is(id){
     function a(){
-        return Player.rayTraceBlock(8,false) == null ? 0 : Player.rayTraceBlock(8,false).getId()==id
+        try {
+            return Player.rayTraceBlock(8,false) == null ? 0 : Player.rayTraceBlock(8,false).getId()==id
+        } catch (error) {
+            return 0
+        }
     }
     return a() || a() || a() || a() || a() || a() || a() || a() || a() || a() || a() || a() || a() || a() || a() || a() || a() || a() || a() || a() || a() || a() || a() || a() || a() || a() || a() || a() || a() || a()
 }
