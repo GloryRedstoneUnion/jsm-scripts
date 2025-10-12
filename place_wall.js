@@ -133,6 +133,7 @@ function main(){
         goto_origin()
         Time.sleep(500)
         move()
+        obx += 3
     }
 }
 
