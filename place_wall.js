@@ -4,6 +4,22 @@ oby = null
 obz = null
 
 
+function must_is_null(){
+    return Player.rayTraceBlock(8,false)==null && Player.rayTraceBlock(8,false)==null && Player.rayTraceBlock(8,false)==null && Player.rayTraceBlock(8,false)==null && Player.rayTraceBlock(8,false)==null && Player.rayTraceBlock(8,false)==null && Player.rayTraceBlock(8,false)==null && Player.rayTraceBlock(8,false)==null && Player.rayTraceBlock(8,false)==null && Player.rayTraceBlock(8,false)==null
+}
+
+function maybe_is(id){
+    if (must_is_null()) return 0
+    return Player.rayTraceBlock(8,false).getId()==id || Player.rayTraceBlock(8,false).getId()==id || Player.rayTraceBlock(8,false).getId()==id || Player.rayTraceBlock(8,false).getId()==id || Player.rayTraceBlock(8,false).getId()==id || Player.rayTraceBlock(8,false).getId()==id || Player.rayTraceBlock(8,false).getId()==id || Player.rayTraceBlock(8,false).getId()==id || Player.rayTraceBlock(8,false).getId()==id || Player.rayTraceBlock(8,false).getId()==id
+}
+
+function show_tips(){
+    Chat.log("放墙脚本开始工作")
+    Chat.log("脚本不要求快捷栏顺序，出现意外立刻选择空快捷栏即可")
+    Time.sleep(1000)
+}
+
+
 function Goto1(dx,dy,dz,xx = 0.5,yy = 0,zz = 0.5)//dx dy dz坐标xx yy zz偏移量
 {
     // if (xx == null) xx == 0.5 Shit
@@ -34,9 +50,11 @@ function set_origin(){
     goto_origin()
 }
 
-function goto_origin(){
-    Goto1(obx, oby + 1, obz, 0.8, 0, 0.5)
-}
+function goto_for_place_block(delta_z = 0) {Goto1(obx, oby + 1, obz + delta_z, 0.8, 0, 0.5)}
+
+function pb_make() {Chat.say("!!pb make 放墙脚本自动备份")}
+
+function goto_origin() {goto_for_place_block()}
 
 function stop(){
     Chat.log("==  结  束  ==")
@@ -45,13 +63,54 @@ function stop(){
     null.正在使用报错退出()
 }
 
-function look(){
-    Chat.say("/clook angles 270 77")
+function look() {Chat.say("/clook angles 270 77")}
+
+function is_end() {return maybe_is("minecraft:purple_stained_glass")}
+
+// 0 normal 1 already 2 stop
+function check(count){
+    count ++
+    if(count > 20) return 2
+    b = Player.getPlayer().rayTraceBlock(8, false)
+    if (b == null) check(count)
+    if (b.getId() == "minecraft:magma_block") return 0
+    if (b.getId() == "minecraft:purple_stained_glass") return 1
+    if (b.getId() != "minecraft:nether_portal" && b.getY != 0) return 2
+    return 1
 }
 
+function place_action(){
+    chk = check()
+    if (chk == 0){
+        KeyBind.keyBind("key.use",true)
+        KeyBind.keyBind("key.use",false)
+        return chk
+    }
+    if (chk == 1){
+        return chk
+    }
+    if (chk == 2){
+        stop()
+        return chk
+    }
+}
+
+function single_place_loop(delta_z = 0){
+    goto_for_place_block(delta_z)
+    look()
+    Time.sleep(200)
+    place_action()
+    Time.sleep(200)
+    return is_end() ? 0 : single_place_loop(delta_z + 1)
+}
 
 function main(){
+    show_tips()
     set_origin()
+    while(1) {
+        single_place_loop()
+        pb_make()
+    }
 }
 
 main()
