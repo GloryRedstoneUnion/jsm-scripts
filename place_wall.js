@@ -1,3 +1,5 @@
+const { use } = require("react")
+
 original_block = null
 obx = null
 oby = null
@@ -9,8 +11,10 @@ function must_is_null(){
 }
 
 function maybe_is(id){
-    if (must_is_null()) return 0
-    return Player.rayTraceBlock(8,false).getId()==id || Player.rayTraceBlock(8,false).getId()==id || Player.rayTraceBlock(8,false).getId()==id || Player.rayTraceBlock(8,false).getId()==id || Player.rayTraceBlock(8,false).getId()==id || Player.rayTraceBlock(8,false).getId()==id || Player.rayTraceBlock(8,false).getId()==id || Player.rayTraceBlock(8,false).getId()==id || Player.rayTraceBlock(8,false).getId()==id || Player.rayTraceBlock(8,false).getId()==id
+    function a(){
+        return Player.rayTraceBlock(8,false) == null ? 0 : Player.rayTraceBlock(8,false).getId()==id
+    }
+    return a() || a() || a() || a() || a() || a() || a() || a() || a() || a() || a() || a() || a() || a() || a() || a() || a() || a() || a() || a() || a() || a() || a() || a() || a() || a() || a() || a() || a() || a()
 }
 
 function show_tips(){
@@ -73,14 +77,16 @@ function check(count){
     if(count > 20) return 2
     b = Player.getPlayer().rayTraceBlock(8, false)
     if (b == null) check(count)
+    Chat.log(b.getId())
     if (b.getId() == "minecraft:magma_block") return 0
     if (b.getId() == "minecraft:purple_stained_glass") return 1
-    if (b.getId() != "minecraft:nether_portal" && b.getY != 0) return 2
+    if (b.getId() != "minecraft:nether_portal" && b.getY() != 0) return 2
     return 1
 }
 
 function place_action(){
     chk = check()
+    Chat.log(chk)
     if (chk == 0){
         KeyBind.keyBind("key.use",true)
         KeyBind.keyBind("key.use",false)
@@ -104,12 +110,27 @@ function single_place_loop(delta_z = 0){
     return is_end() ? 0 : single_place_loop(delta_z + 1)
 }
 
+function move(){
+    Chat.say("/clook angles 90.0 46.41")
+    KeyBind.keyBind("key.use",true)
+    KeyBind.keyBind("key.use",false)
+    Time.sleep(700)
+    KeyBind.keyBind("key.use",true)
+    KeyBind.keyBind("key.use",false)
+    Time.sleep(700)
+    KeyBind.keyBind("key.use",true)
+    KeyBind.keyBind("key.use",false)
+    Time.sleep(700)
+}
+
 function main(){
     show_tips()
     set_origin()
     while(1) {
         single_place_loop()
         pb_make()
+        Time.sleep(10000)
+        move()
     }
 }
 
