@@ -129,7 +129,9 @@ function main(){
     while(1) {
         single_place_loop()
         pb_make()
-        Time.sleep(10000)
+        Time.sleep(20000)
+        goto_origin()
+        Time.sleep(500)
         move()
     }
 }
