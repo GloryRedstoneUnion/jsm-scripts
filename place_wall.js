@@ -24,9 +24,6 @@ function show_tips(){
 
 function Goto1(dx,dy,dz,xx = 0.5,yy = 0,zz = 0.5)//dx dy dz坐标xx yy zz偏移量
 {
-    // if (xx == null) xx == 0.5 Shit
-    // if (yy == null) yy == 0.5
-    // if (zz == null) zz == 0.5
     gb_tt=Player.getPlayer().getPos()
     Chat.say("#goto "+dx.toString()+" "+dy.toString()+" "+dz.toString())
     while(Math.abs(gb_tt.getX()-dx-xx)>0.4 || Math.abs(gb_tt.getZ()-dz-zz)>0.4 || Math.abs(gb_tt.getY()-dy)>0)
@@ -72,7 +69,8 @@ function is_end() {return maybe_is("minecraft:purple_stained_glass")}
 // 0 normal 1 already 2 stop
 function check(count){
     count ++
-    if(count > 20) return 2
+    if(count > 20) return 1
+    //if(count > 20) return 2
     b = Player.getPlayer().rayTraceBlock(8, false)
     if (b == null) check(count)
     Chat.log(b.getId())
