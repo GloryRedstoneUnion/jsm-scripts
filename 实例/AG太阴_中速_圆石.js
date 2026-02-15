@@ -1,0 +1,165 @@
+const FILL_CONTRNIS_TITLE = "原始物质制造台";
+const COMMON_TITLE= "合成"
+const MAX_COUNT = 21
+const ROWS=5;
+function getAndMoveOne(SlotA,SlotB){
+    Player.openInventory().click(SlotA,0) ;
+    Player.openInventory().click(SlotB,1) ;
+    Player.openInventory().click(SlotA,0) ;
+}
+function getAndMoveMulti(SlotA,SlotB,Num){
+    
+    var num2=Player.openInventory().getSlot(SlotA).getCount();
+    var num3=Num;
+    Num=Math.min(Num,num2);
+    var left=0;
+    
+
+    if(Num<num3){
+        left=num3-Num
+    }
+    Player.openInventory().click(SlotA,0) ;
+    for( let i=0;i<Num;++i){
+    Player.openInventory().click(SlotB,1) ;
+    }
+    Player.openInventory().click(SlotA,0) ;
+    Client.waitTick(1);
+    return left;
+}
+function getIdSlot(Id){
+    var slots= Player.openInventory().findItem(Id)
+    if (slots.length<=0){
+       return -1;
+    }
+    else{
+        for(let i=0;i<slots.length;++i){
+            if (slots[i]>=9*ROWS){
+                return slots[i];
+            }
+        }
+        return -1;
+    }
+}
+function getIdAndMove(Id,SlotB,Num){
+
+        var i3=getIdSlot(Id);
+    if (i3==-1){
+        return -1;
+    }
+    Num=getAndMoveMulti(i3,SlotB,Num);
+      
+    
+    while(Num>0){
+        Client.waitTick(2);
+ 
+            var i3=getIdSlot(Id);
+            if (i3==-1){
+                return -1;
+            }
+      
+        Num=getAndMoveMulti(i3,SlotB,Num);
+      
+        
+    }
+    return 0;
+}
+function waitUntilOpen(){
+    while (COMMON_TITLE == Player.openInventory().getContainerTitle()) {
+        Client.waitTick(2);
+      }
+}
+function checkTitle(Title){
+    if(Player.openInventory().getContainerTitle()==Title){
+        return true ;
+    }
+    else return false;
+}
+function ErrorTitle(Title){
+    if(Player.openInventory().getContainerTitle()!=Title){
+        throw new Error("已关闭界面")
+    }
+}
+function checkIfOver(){
+    var i1=Player.openInventory().findItem("minecraft:snowball");
+    var i2=Player.openInventory().findItem("minecraft:fire_charge");
+    if(i1.length>0 && i1[0]<45){
+        //player.openInventory().dropSlot(i1[0]);
+        return true
+    }
+    else if (i2.length>0 && i2[0]<45){
+        return true
+    }
+    else return false;
+}
+function checkSlotNum(slot,num){
+    if(Player.openInventory().getSlot(slot).getCount()!=num){
+        return false;
+    }
+    return true;
+}
+function main(){
+
+    waitUntilOpen();
+    while(true){
+        if(checkTitle(FILL_CONTRNIS_TITLE)){
+            for (let i=0;i<7*ROWS;++i){
+                if (Player.openInventory().getSlot(i).getItemId()!="minecraft:air"){
+                    Player.openInventory().dropSlot(i,true);
+                    
+                }
+            }
+            if(Player.openInventory().getContainerTitle()!=FILL_CONTRNIS_TITLE){
+                return 0;
+            }
+            Client.waitTick(1);
+            for(let i=1;i<4;++i){
+                for(let j=1;j<8;++j){
+                    var slotid=9*i+j;
+                   if(i==1){
+                   var num_s=55-(7*i+2*j+5);
+			}
+                   if(i==2){
+                   var num_s=48-(7*i+2*j+5);
+			}
+                   if(i==3){
+                   var num_s=41-(7*i+2*j+5);
+			}
+//                   var num_s=51-(7*i+2*j+5);
+                   if(i==0&&j==0){
+                    num_s=1;
+                }
+                    if(getIdAndMove("minecraft:cobblestone",slotid,num_s)==-1){
+                        return -1;
+                    }
+                    Client.waitTick(1);
+                  
+
+                    
+                    if(Player.openInventory().getContainerTitle()!=FILL_CONTRNIS_TITLE){
+                        return 0;
+                    }
+                }
+            }
+            while(!checkIfOver()){
+                Client.waitTick(1);
+                if(Player.openInventory().getContainerTitle()!=FILL_CONTRNIS_TITLE){
+                    return 0;
+                }
+            }
+            for (let i=0;i<9*ROWS;++i){
+                if (Player.openInventory().getSlot(i).getItemId()!="minecraft:air"){
+                    Player.openInventory().dropSlot(i);
+                }
+            }
+            if(Player.openInventory().getContainerTitle()!=FILL_CONTRNIS_TITLE){
+                return 0;
+            }
+            Client.waitTick(2);
+        }
+        else break; 
+    }
+    return 0;
+    
+}
+var a=main();
+Chat .log("脚本终止");
