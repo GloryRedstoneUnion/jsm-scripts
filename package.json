@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "esbuild scripts/切门/烈焰人.ts --bundle --outfile=scripts/切门/烈焰人.js --target=es2022",
+    "watch": "esbuild scripts/切门/烈焰人.ts --bundle --outfile=scripts/切门/烈焰人.js --target=es2022 --watch"
   },
   "repository": {
     "type": "git",
@@ -14,6 +16,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "esbuild": "^0.28.1",
     "typescript": "^7.0.2"
   }
 }
