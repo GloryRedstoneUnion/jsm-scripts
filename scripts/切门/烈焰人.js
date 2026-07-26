@@ -16,16 +16,29 @@
   }
   function init() {
     Chat.say("#setting allowBreak false");
+    Time.sleep(500);
     init_pos = p.getPos().add(0, -1, 0).toBlockPos().toPos3D();
     log_info(init_pos.toString());
-    goto(init_pos.toBlockPos(), newP(0, 0, 0));
+    goto(init_pos.add(10, 1, 0).toBlockPos(), newP(0, 0, 0));
   }
-  function goto(q, d) {
-    var p2 = q.toPos3D();
-    Chat.say(`#goto ${p2.x.toString()} ${p2.y.toString()} ${p2.z.toString()}`);
+  function goto(i, d) {
+    var q = i.toPos3D();
+    var s = p.getPos();
+    Chat.say(`#goto ${q.x.toString()} ${q.y.toString()} ${q.z.toString()}`);
+    while (Math.abs(s.x - q.x - d.x) > 0.7 || Math.abs(s.z - q.z - d.z) > 0.7 || Math.abs(s.y - q.y) > 0) {
+      Time.sleep(50);
+      refresh();
+      s = p.getPos();
+    }
+    Chat.say("#stop");
+    Time.sleep(350);
+    p.setPos(q.add(d.x, 0, d.z));
   }
   function newP(x, y, z) {
     return PositionCommon.createPos(x, y, z);
+  }
+  function refresh() {
+    p = Player.getPlayer();
   }
   function log_info(str, say = false) {
     const s = `\xA77[\xA75${scriptname}\xA77] INFO|` + str;

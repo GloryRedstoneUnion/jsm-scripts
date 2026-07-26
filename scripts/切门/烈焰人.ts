@@ -5,7 +5,7 @@
 const scriptname = "BlazeCutter";
 // const reverse = !GlobalVars.getBoolean(scriptname);
 const debug_mode = false;
-const p = Player.getPlayer();
+var p = Player.getPlayer();
 
 // GlobalVars.putBoolean(scriptname, reverse);
 // Chat.actionbar(
@@ -57,9 +57,10 @@ function main() {
 // Init
 function init() {
   Chat.say("#setting allowBreak false");
+  Time.sleep(500);
   init_pos = p!.getPos().add(0, -1, 0).toBlockPos().toPos3D();
   log_info(init_pos.toString());
-  goto(init_pos.toBlockPos(), newP(0, 0, 0));
+  goto(init_pos.add(10, 1, 0).toBlockPos(), newP(0, 0, 0));
 }
 
 // Step 1
@@ -98,9 +99,26 @@ function verify_block(
   return World.getBlock(pos)?.getId() == "minecraft:" + name;
 }
 
-function goto(q: BlockPosHelper, d: Pos3D) {
-  var p = q.toPos3D();
-  Chat.say(`#goto ${p.x.toString()} ${p.y.toString()} ${p.z.toString()}`);
+function goto(i: BlockPosHelper, d: Pos3D) {
+  var q = i.toPos3D();
+  var s = p!.getPos();
+  Chat.say(`#goto ${q.x.toString()} ${q.y.toString()} ${q.z.toString()}`);
+  while (
+    Math.abs(s.x - q.x - d.x) > 0.7 ||
+    Math.abs(s.z - q.z - d.z) > 0.7 ||
+    Math.abs(s.y - q.y) > 0
+  ) {
+    Time.sleep(50);
+    refresh();
+    s = p!.getPos();
+    // Chat.log(s.toString());
+    // Chat.log(s.x - q.x - d.x);
+    // Chat.log(s.z - q.z - d.z);
+    // Chat.log(s.y - q.y);
+  }
+  Chat.say("#stop");
+  Time.sleep(350);
+  p!.setPos(q.add(d.x, 0, d.z));
 }
 
 function newPb(x: int, y: int, z: int): BlockPosHelper {
@@ -109,6 +127,10 @@ function newPb(x: int, y: int, z: int): BlockPosHelper {
 
 function newP(x: double, y: double, z: double): Pos3D {
   return PositionCommon.createPos(x, y, z);
+}
+
+function refresh() {
+  p = Player.getPlayer();
 }
 
 function pb_backup() {
