@@ -1,2 +1,2 @@
-./headers/*
-./node_modules/*
+headers/
+node_modules/
