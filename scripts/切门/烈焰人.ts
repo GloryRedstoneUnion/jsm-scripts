@@ -52,6 +52,7 @@ function main() {
     maxRetries: 5,
     targetPos: init_pos,
   };
+  place_frame(startupCtx);
 }
 
 // Init
@@ -60,46 +61,60 @@ function init() {
   Time.sleep(500);
   init_pos = p!.getPos().add(0, -1, 0).toBlockPos().toPos3D();
   log_info(init_pos.toString());
-  goto(init_pos.add(10, 1, 0).toBlockPos(), newP(0, 0, 0));
 }
 
 // Step 1
 function place_frame(ctx: TaskContext): StepResult {
+  init();
+  // SubStep 1
+  function init() {
+    goto(init_pos.add(0, 1, 0).toBlockPos(), newP(0.2, 0, 0.5));
+    look(90, 80);
+    Time.sleep(500);
+    if (!verify_item("Obsidian", 2)) {
+      log_err("未检测到黑曜石");
+      return StepResult.FATAL;
+    }
+
+    // go_x(5);
+  }
   return StepResult.SUCCESS;
 }
 
 // Tool Functions
 function verify_item(item: string, hotbar = 0): boolean {
-  if ((hotbar = 0))
-    return p?.getMainHand().getName().toString() == "minecraft:" + item;
+  if (hotbar == 0) return p!.getMainHand().getName().getString() == item;
   const inv = Player.openInventory();
+  // Chat.log(hotbar);
+  // Chat.log(
+  //   inv
+  //     .getSlot(hotbar + 35)
+  //     .getName()
+  //     .getString(),
+  // );
   return (
     inv
-      .getSlot(hotbar + 27)
+      .getSlot(hotbar + 35)
       .getName()
-      .toString() ==
-    "minecraft:" + item
+      .getString() == item
   );
 }
 
-function verify_block(
-  name: string,
-  dx: number,
-  dy: number,
-  dz: number,
-  delta = true,
-): boolean {
+function verify_block(name: string, d: BlockPosHelper, delta = true): boolean {
   var pos: Pos3D;
   if (delta) {
     pos = p!.getPos().toBlockPos().toPos3D();
-    pos.add(dx, dy, dz);
+    pos.add(d.toPos3D());
   } else {
-    pos = newPb(dx, dy, dz).toPos3D();
+    pos = d.toPos3D();
   }
   return World.getBlock(pos)?.getId() == "minecraft:" + name;
 }
 
-function goto(i: BlockPosHelper, d: Pos3D) {
+function goto(
+  i: BlockPosHelper,
+  d: Pos3D = PositionCommon.createPos(0.5, 0, 0.5),
+) {
   var q = i.toPos3D();
   var s = p!.getPos();
   Chat.say(`#goto ${q.x.toString()} ${q.y.toString()} ${q.z.toString()}`);
@@ -121,6 +136,34 @@ function goto(i: BlockPosHelper, d: Pos3D) {
   p!.setPos(q.add(d.x, 0, d.z));
 }
 
+// Forward!
+function go_x(x: int, dx: number = 0.5) {
+  const s = refresh();
+  const r = s!.getPos().toBlockPos().toPos3D().x;
+  while (Math.abs(Math.abs(refresh()!.getPos().x - r) - x - dx) > 0.7) {
+    Player.addInput(Player.createPlayerInput(1, 0, p!.getYaw()));
+    Time.sleep(50);
+    // Chat.log(Math.abs(Math.abs(refresh()!.getPos().x - r) - x - dx));
+  }
+  Player.clearInputs();
+  Time.sleep(350);
+  p!.setPos(r + x + dx, s!.getPos().y, s!.getPos().z);
+}
+
+// Forward!
+function go_z(z: int, dz: number = 0.5) {
+  const s = refresh();
+  const r = s!.getPos().toBlockPos().toPos3D().z;
+  while (Math.abs(Math.abs(refresh()!.getPos().z - r) - z - dz) > 0.7) {
+    Player.addInput(Player.createPlayerInput(1, 0, p!.getYaw()));
+    Time.sleep(50);
+    // Chat.log(Math.abs(Math.abs(refresh()!.getPos().z - r) - z - dz));
+  }
+  Player.clearInputs();
+  Time.sleep(350);
+  p!.setPos(s!.getPos().x, s!.getPos().y, r + z + dz);
+}
+
 function newPb(x: int, y: int, z: int): BlockPosHelper {
   return PositionCommon.createBlockPos(x, y, z);
 }
@@ -129,8 +172,13 @@ function newP(x: double, y: double, z: double): Pos3D {
   return PositionCommon.createPos(x, y, z);
 }
 
-function refresh() {
+function refresh(): ClientPlayerEntityHelper | null {
   p = Player.getPlayer();
+  return p;
+}
+
+function look(a: number, b: number) {
+  Chat.say(`/clook angles ${a} ${b}`);
 }
 
 function pb_backup() {
