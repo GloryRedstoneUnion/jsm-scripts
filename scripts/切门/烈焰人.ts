@@ -6,6 +6,7 @@ const scriptname = "BlazeCutter";
 // const reverse = !GlobalVars.getBoolean(scriptname);
 const debug_mode = false;
 var p = Player.getPlayer();
+const i = Player.getInteractionManager();
 
 // GlobalVars.putBoolean(scriptname, reverse);
 // Chat.actionbar(
@@ -75,8 +76,7 @@ function place_frame(ctx: TaskContext): StepResult {
       log_err("未检测到黑曜石");
       return StepResult.FATAL;
     }
-
-    // go_x(5);
+    // i?.interactBlock()
   }
   return StepResult.SUCCESS;
 }
@@ -136,32 +136,83 @@ function goto(
   p!.setPos(q.add(d.x, 0, d.z));
 }
 
-// Forward!
-function go_x(x: int, dx: number = 0.5) {
+enum direction {
+  L = 1,
+  R = 2,
+  FWD = 0,
+  REV = -1,
+}
+
+function d2Input(d: direction): [int, int] {
+  switch (d) {
+    case direction.L:
+      return [0, 1];
+
+    case direction.R:
+      return [0, -1];
+
+    case direction.FWD:
+      return [1, 0];
+
+    case direction.REV:
+      return [-1, 0];
+  }
+}
+
+function go_x(x: int, dx: number = 0.5, d: direction = direction.FWD) {
   const s = refresh();
   const r = s!.getPos().toBlockPos().toPos3D().x;
-  while (Math.abs(Math.abs(refresh()!.getPos().x - r) - x - dx) > 0.7) {
-    Player.addInput(Player.createPlayerInput(1, 0, p!.getYaw()));
+  const [a, b] = d2Input(d);
+
+  while (
+    Math.abs(Math.abs(refresh()!.getPos().x - r) - Math.abs(x) - dx) > 0.7
+  ) {
+    Player.addInput(Player.createPlayerInput(a, b, p!.getYaw()));
+    // Player.addInput(Player.createPlayerInput(1, 0, p!.getYaw()));
     Time.sleep(50);
-    // Chat.log(Math.abs(Math.abs(refresh()!.getPos().x - r) - x - dx));
   }
   Player.clearInputs();
   Time.sleep(350);
   p!.setPos(r + x + dx, s!.getPos().y, s!.getPos().z);
 }
 
-// Forward!
-function go_z(z: int, dz: number = 0.5) {
+function go_z(z: int, dz: number = 0.5, d: direction = direction.FWD) {
   const s = refresh();
   const r = s!.getPos().toBlockPos().toPos3D().z;
-  while (Math.abs(Math.abs(refresh()!.getPos().z - r) - z - dz) > 0.7) {
-    Player.addInput(Player.createPlayerInput(1, 0, p!.getYaw()));
+  const [a, b] = d2Input(d);
+
+  while (
+    Math.abs(Math.abs(refresh()!.getPos().z - r) - Math.abs(z) - dz) > 0.7
+  ) {
+    Player.addInput(Player.createPlayerInput(a, b, p!.getYaw()));
+    // Player.addInput(Player.createPlayerInput(1, 0, p!.getYaw()));
     Time.sleep(50);
-    // Chat.log(Math.abs(Math.abs(refresh()!.getPos().z - r) - z - dz));
   }
   Player.clearInputs();
   Time.sleep(350);
   p!.setPos(s!.getPos().x, s!.getPos().y, r + z + dz);
+}
+
+function setPos(
+  x: number | null,
+  y: number | null,
+  z: number | null,
+  d = true,
+) {
+  refresh();
+  if (!d) {
+    p!.setPos(
+      x === null ? p!.getPos().x : x,
+      y === null ? p!.getPos().y : y,
+      z === null ? p!.getPos().z : z,
+    );
+  } else {
+    p!.setPos(
+      p!.getPos().x + (x === null ? 0 : x),
+      p!.getPos().y + (y === null ? 0 : y),
+      p!.getPos().z + (z === null ? 0 : z),
+    );
+  }
 }
 
 function newPb(x: int, y: int, z: int): BlockPosHelper {

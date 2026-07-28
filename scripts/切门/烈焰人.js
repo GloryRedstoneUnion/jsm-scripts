@@ -2,6 +2,7 @@
   // scripts/切门/烈焰人.ts
   var scriptname = "BlazeCutter";
   var p = Player.getPlayer();
+  var i = Player.getInteractionManager();
   main();
   var init_pos = p.getPos().add(0, -1, 0).toBlockPos().toPos3D();
   function main() {
@@ -39,8 +40,8 @@
     const inv = Player.openInventory();
     return inv.getSlot(hotbar + 35).getName().getString() == item;
   }
-  function goto(i, d = PositionCommon.createPos(0.5, 0, 0.5)) {
-    var q = i.toPos3D();
+  function goto(i2, d = PositionCommon.createPos(0.5, 0, 0.5)) {
+    var q = i2.toPos3D();
     var s = p.getPos();
     Chat.say(`#goto ${q.x.toString()} ${q.y.toString()} ${q.z.toString()}`);
     while (Math.abs(s.x - q.x - d.x) > 0.7 || Math.abs(s.z - q.z - d.z) > 0.7 || Math.abs(s.y - q.y) > 0) {
